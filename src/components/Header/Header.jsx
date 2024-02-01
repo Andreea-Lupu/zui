@@ -136,7 +136,7 @@ function Header({ setSearchCurrentValue = () => {} }) {
   };
 
   return (
-    <AppBar position={show ? 'fixed' : 'absolute'} sx={{ height: '5rem' }}>
+    <AppBar position={show ? 'fixed' : 'absolute'} sx={{ height: '5rem', zIndex: '1400' }}>
       <Toolbar className={classes.header}>
         <Grid container className={classes.grid}>
           <Grid item container xs={3} md={4} spacing="1.5rem" className={classes.gridItem}>

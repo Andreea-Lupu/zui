@@ -323,12 +323,12 @@ function TagDetails() {
               </ToggleButton>
             </ToggleButtonGroup>
           </Grid>
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} md={8} id="vulnerabilities-grid">
             <Card className={classes.cardRoot}>
               <CardContent className={classes.tabCardContent}>{renderTabContent()}</CardContent>
             </Card>
           </Grid>
-          <Grid item xs={12} md={4} className={classes.metadata}>
+          <Grid item xs={12} md={4} className={classes.metadata} id="tag-details-metadata">
             <TagDetailsMetadata
               platform={getPlatform()}
               size={selectedManifest?.size}

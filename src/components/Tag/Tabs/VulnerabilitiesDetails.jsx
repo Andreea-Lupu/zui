@@ -29,6 +29,7 @@ import * as XLSX from 'xlsx';
 import exportFromJSON from 'export-from-json';
 import ViewHeadlineIcon from '@mui/icons-material/ViewHeadline';
 import ViewAgendaIcon from '@mui/icons-material/ViewAgenda';
+import ViewSidebarIcon from '@mui/icons-material/ViewSidebar';
 
 import VulnerabilitiyCard from '../../Shared/VulnerabilityCard';
 import VulnerabilityCountCard from '../../Shared/VulnerabilityCountCard';
@@ -144,7 +145,7 @@ function VulnerabilitiesDetails(props) {
   const [anchorExport, setAnchorExport] = useState(null);
   const openExport = Boolean(anchorExport);
 
-  const [selectedViewMore, setSelectedViewMore] = useState(true);
+  const [selectedViewMore, setSelectedViewMore] = useState(0);
 
   const getCVERequestName = () => {
     return digest !== '' ? `${name}@${digest}` : `${name}:${tag}`;
@@ -307,7 +308,7 @@ function VulnerabilitiesDetails(props) {
   const renderCVEs = () => {
     return !isEmpty(cveData) ? (
       cveData.map((cve, index) => {
-        return <VulnerabilitiyCard key={index} cve={cve} name={name} platform={platform} expand={selectedViewMore} />;
+        return <VulnerabilitiyCard key={index} cve={cve} name={name} platform={platform} viewMode={selectedViewMore} />;
       })
     ) : (
       <div>{!isLoading && <Typography className={classes.none}> No Vulnerabilities </Typography>}</div>
@@ -346,7 +347,7 @@ function VulnerabilitiesDetails(props) {
   };
 
   return (
-    <Stack direction="column" spacing="1rem" data-testid="vulnerability-container">
+    <Stack direction="column" spacing="1rem" data-testid="vulnerability-container" zIndex={1400}>
       <Stack className={classes.vulnerabilities}>
         <Typography variant="h4" gutterBottom component="div" align="left" className={classes.title}>
           Vulnerabilities
@@ -361,12 +362,22 @@ function VulnerabilitiesDetails(props) {
             action={<CircularProgress size="2rem" sx={{ color: '#FFFFFF' }} />}
           />
           <ToggleButton
+            value="viewMore"
+            title="Drawer list view"
+            size="small"
+            className={classes.view}
+            selected={selectedViewMore === 2}
+            onChange={() => setSelectedViewMore(2)}
+          >
+            <ViewSidebarIcon style={{ transform: 'scaleX(-1)' }} />
+          </ToggleButton>
+          <ToggleButton
             value="viewLess"
             title="Collapse list view"
             size="small"
             className={classes.view}
-            selected={!selectedViewMore}
-            onChange={() => setSelectedViewMore(false)}
+            selected={selectedViewMore === 1}
+            onChange={() => setSelectedViewMore(1)}
           >
             <ViewHeadlineIcon />
           </ToggleButton>
@@ -375,8 +386,8 @@ function VulnerabilitiesDetails(props) {
             title="Expand list view"
             size="small"
             className={classes.view}
-            selected={selectedViewMore}
-            onChange={() => setSelectedViewMore(true)}
+            selected={selectedViewMore === 0}
+            onChange={() => setSelectedViewMore(0)}
           >
             <ViewAgendaIcon />
           </ToggleButton>
@@ -427,8 +438,17 @@ function VulnerabilitiesDetails(props) {
           <SearchIcon />
         </div>
       </Stack>
-      {renderCVEs()}
-      {renderListBottom()}
+      {selectedViewMore === 2 ? (
+        <Stack direction="column" spacing="0.5rem">
+          {renderCVEs()}
+          {renderListBottom()}
+        </Stack>
+      ) : (
+        <Stack direction="column" spacing="1rem">
+          {renderCVEs()}
+          {renderListBottom()}
+        </Stack>
+      )}
     </Stack>
   );
 }
